@@ -40,7 +40,7 @@ int vle8_test() {
         li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
         vle8.v v0, (t1)                \n\t\
-        addi t1, t1, 0x100            \n\t\
+        addi t1, t1, 0x100             \n\t\
         vse8.v v0, (t1)                \n\t\
     "
     :
@@ -79,47 +79,362 @@ int vlse8_test() {
 }
 
 int vlxei8_test() {
+    data_init();
+    // load from 0x90000000
+    // store to 0x90000100
+    asm volatile(
+       "li t1, 0x90000000              \n\t\
+        li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t0, 1                       \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vxor.vi v0, v0, 1              \n\t\
+        vlxei8.v v1, (t1), v0          \n\t\
+        addi t1, t1, 0x100             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 1) return 1;
+    }
     return 0;
 }
 
-int vle16_test() {
+int vaddvv_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 1              \n\t\
+        vadd.vv v1, v1, v1             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 2) return 1;
+    }
     return 0;
 }
 
-int vlse16_test() {
+int vaddvx_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 1              \n\t\
+        li t0, 3                       \n\t\
+        vadd.vx v1, v1, t0             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 4) return 1;
+    }
     return 0;
 }
 
-int vlxei16_test() {
+int vaddvi_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 1              \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 1) return 1;
+    }
     return 0;
 }
 
-int vle32_test() {
+int vandvv_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        vadd.vi v2, v0, 7              \n\t\
+        vand.vv v1, v1, v2             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 4) return 1;
+    }
     return 0;
 }
 
-int vlse32_test() {
+int vandvx_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        li t0, 7                       \n\t\
+        vand.vx v1, v1, t0             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 4) return 1;
+    }
     return 0;
 }
 
-int vlxei32_test() {
+int vandvi_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        vand.vi v1, v1, 7              \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 4) return 1;
+    }
     return 0;
 }
 
-int vle64_test() {
+int vorvv_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        vadd.vi v2, v0, 7              \n\t\
+        vor.vv v1, v1, v2             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 7) return 1;
+    }
     return 0;
 }
 
-int vlse64_test() {
+int vorvx_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        li t0, 7                       \n\t\
+        vor.vx v1, v1, t0              \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 7) return 1;
+    }
     return 0;
 }
 
-int vlxei64_test() {
+int vorvi_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        vor.vi v1, v1, 7               \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 7) return 1;
+    }
     return 0;
 }
 
+int vrsubvx_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        li t0, 7                       \n\t\
+        vrsub.vx v1, v1, t0            \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 3) return 1;
+    }
+    return 0;
+}
 
+int vrsubvi_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        vrsub.vi v1, v1, 7             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 3) return 1;
+    }
+    return 0;
+}
 
+int vsllvv_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        vadd.vi v2, v0, 1              \n\t\
+        vsll.vv v1, v1, v2             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 8) return 1;
+    }
+    return 0;
+}
+
+int vsllvx_test() {
+    asm volatile(
+       "li t0, 16                      \n\t\
+        vsetvli t0, t0, e8, m1, tu, mu \n\t\
+        li t1, 0x90000100              \n\t\
+        vxor.vv v0, v0, v0             \n\t\
+        vadd.vi v1, v0, 4              \n\t\
+        li t0, 1                       \n\t\
+        vsll.vx v1, v1, t0             \n\t\
+        vse8.v v1, (t1)                \n\t\
+    "
+    :
+    :
+    : "t0", "t1"
+    );
+    char *verify = (char *)(0x90000100UL);
+    for (int i = 0; i <16; ++i) {
+        if (verify[i] != 8) return 1;
+    }
+    return 0;
+}
+
+int vsllvi_test() {
+    return 0;
+}
+
+int vsravv_test() {
+    return 0;
+}
+
+int vsravx_test() {
+    return 0;
+}
+
+int vsravi_test() {
+    return 0;
+}
+
+int vsrlvv_test() {
+    return 0;
+}
+
+int vsrlvx_test() {
+    return 0;
+}
+
+int vsrlvi_test() {
+    return 0;
+}
+
+int vsubvv_test() {
+    return 0;
+}
+
+int vsubvx_test() {
+    return 0;
+}
+
+int vsubvi_test() {
+    return 0;
+}
+
+int vxorvv_test() {
+    return 0;
+}
+
+int vxorvx_test() {
+    return 0;
+}
+
+int vxorvi_test() {
+    return 0;
+}
 
 void halt(int code) {
   __asm__ volatile("mv a0, %0; .word 0x0005006b" : :"r"(code));
@@ -147,6 +462,18 @@ void uart_puts(char *s) {
     }
 }
 
+void uart_putn(int n) {
+    char buf[10], buf_r[10];
+    int offset = 0;
+    do {
+        buf[offset++] = n % 10 + '0';
+        n = n / 10;
+    } while (n);
+    for (int i = 0; i < offset; ++i) buf_r[offset-i-1] = buf[i];
+    buf_r[offset] = 0;
+    uart_puts(buf_r);
+}
+
 void memcpy(char* dest, char* source, int num) {
     for (int i = 0; i < num; ++i) dest[i] = source[i];
 }
@@ -154,12 +481,27 @@ void memcpy(char* dest, char* source, int num) {
 int non_main() {
     int count = 0;
     int (*vsetvl_tests[])() = {vsetvl_test, vsetvli_test};
-    char *vsetvl_names[] = {"vsetvl", "vsetvli"};
+    char *vsetvl_names[] ={"vsetvl", "vsetvli"};
     int vsetvl_size = 2;
 
-    int (*load_store_tests[])() = {vle8_test, vlse8_test, vlxei8_test, vle16_test, vlse16_test, vlxei16_test, vle32_test, vlse32_test, vlxei32_test, vle64_test, vlse64_test, vlxei64_test};
-    char *load_store_names[] = {"vle8", "vlse8", "vlxei8", "vle16", "vlse16", "vlxei16", "vle32", "vlse32", "vlxei32", "vle64", "vlse64", "vlxei64"};
-    int load_store_size = 12;
+    int (*load_store_tests[])() = {vle8_test, vlse8_test, vlxei8_test};
+    char *load_store_names[] = {"vle8", "vlse8", "vlxei8"};
+    int load_store_size = 3;
+
+    int (*calc_tests[])() = {vaddvv_test, vaddvx_test, vaddvi_test, vandvv_test, vandvx_test, vandvi_test,
+                             vorvv_test, vorvx_test, vorvi_test, vrsubvx_test, vrsubvi_test, 
+                             vsllvv_test, vsllvx_test, vsllvi_test, vsravv_test, vsravx_test, vsravi_test, 
+                             vsrlvv_test, vsrlvx_test, vsrlvi_test, vsubvv_test, vsubvx_test, vsubvi_test, 
+                             vxorvv_test, vxorvx_test, vxorvi_test
+    };
+    char *calc_names[] = {"vaddvv", "vaddvx", "vaddvi", "vandvv", "vandvx", "vandvi", 
+                          "vorvv", "vorvx", "vorvi", "vrsubvx", "vrsubvi", 
+                          "sllvv", "sllvx", "sllvi", "sravv", "sravx", "sravi", 
+                          "vsrlvv", "vsrlvx", "vsrlvi", "vsrlvv", "vsrlvx", "vsrlvi", 
+                          "vsubvv", "vsubvx", "vsubvi", "vsubvv", "vsubvx", "vsubvi",
+                          "vxorvv", "vxorvx", "vxorvi"
+    };
+    int calc_size = 26;
 
     uart_puts("RVV vsetvl test begin\n");
     uart_puts("---------------------\n");
@@ -168,14 +510,18 @@ int non_main() {
         uart_puts(vsetvl_names[i]);
         if (ret == 0) {
             uart_puts(" test passed\n");
+            ++count;
         } else {
             uart_puts(" test failed\n");
         }
     }
+    uart_putn(count);
+    uart_puts(" test point pass\n");
     uart_puts("RVV vsetvl test end\n");
     uart_puts("-------------------\n");
     uart_puts("\n\n");
     // we did not clear bss, careful with non-initialized data
+    count = 0;
     uart_puts("RVV load & store test begin\n");
     uart_puts("---------------------------\n");
     for (int i = 0; i < load_store_size; ++i) {
@@ -188,7 +534,28 @@ int non_main() {
 	        uart_puts(" test failed\n");
 	    }
     }
+    uart_putn(count);
+    uart_puts(" test point pass\n");
     uart_puts("RVV load & store test end\n");
+    uart_puts("-------------------------\n");
+    uart_puts("\n\n");
+
+    count = 0;
+    uart_puts("RVV arithmetic test begin\n");
+    uart_puts("---------------------------\n");
+    for (int i = 0; i < calc_size; ++i) {
+    	int ret = calc_tests[i]();
+	    uart_puts(calc_names[i]);
+	    if (ret == 0) {
+	        uart_puts(" test passed\n");
+	        ++count;
+	    } else {
+	        uart_puts(" test failed\n");
+	    }
+    }
+    uart_putn(count);
+    uart_puts(" test point pass\n");
+    uart_puts("RVV arithmetic test end\n");
     uart_puts("-------------------------\n");
     uart_puts("\n\n");
 
