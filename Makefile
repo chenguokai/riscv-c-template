@@ -18,7 +18,7 @@ C_SOURCES = $(shell find ./ -name '*.c')
 # BUILD_DIR = build
 
 # Note that we use clang to compile RVV assembly
-CFLAGS = -menable-experimental-extensions -march=rv64gv1p0 -nostdlib -T ${LDSCRIPT} -mabi=lp64  -mcmodel=medium 
+CFLAGS = -menable-experimental-extensions -march=rv64gv1p0   -nostdlib -T ${LDSCRIPT} -ffreestanding  -mabi=lp64  -mcmodel=medium 
 
 ####################
 # build rules
@@ -34,7 +34,7 @@ ${OBJECTS}: %.o: %.c
 	$(CC) -c $< $(CFLAGS) -o $@
 
 final.elf: ${OBJECTS}
-	${CC} $< ${CLFAGS} -o final.elf
+	${CC} ${OBJECTS} ${CFLAGS} -o final.elf
 
 %.bin: final.elf
 	$(OBJCOPY) -O binary $< $@
