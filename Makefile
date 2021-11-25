@@ -18,35 +18,32 @@ C_SOURCES = $(shell find ./ -name '*.c')
 # BUILD_DIR = build
 
 # Note that we use clang to compile RVV assembly
-CFLAGS = -menable-experimental-extensions -march=rv64gv1p0   -nostdlib -T ${LDSCRIPT} -ffreestanding  -mabi=lp64  -mcmodel=medium 
-
+# CFLAGS = -menable-experimental-extensions -march=rv64gv1p0 -nostdlib -nostdinc -T ${LDSCRIPT} -fno-builtin -ffreestanding  -mabi=lp64  -mcmodel=medium 
+CFLAGS = -menable-experimental-extensions -march=rv64gv1p0 -nostdlib -T ${LDSCRIPT} -mcmodel=medany
 ####################
 # build rules
 ####################
 
-OBJECTS = $(notdir $(C_SOURCES:.c=.o))
+OBJECTS = $(notdir $(C_SOURCES:.c=.elf))
 OBJECTS_BIN = $(OBJECTS:.elf=.bin)
 OBJECTS_DISASSEMBLY = $(OBJECTS:.elf=.disass)
 
 all: VIRTUAL_TARGET
 
-${OBJECTS}: %.o: %.c
-	$(CC) -c $< $(CFLAGS) -o $@
+${OBJECTS}: %.elf: %.c
+	$(CC) start.S $< $(CFLAGS) -o $@
 
-final.elf: ${OBJECTS}
-	${CC} ${OBJECTS} ${CFLAGS} -o final.elf
-
-%.bin: final.elf
+%.bin: ${OBJECTS}
 	$(OBJCOPY) -O binary $< $@
 
-%.disass: final.elf
+%.disass: ${OBJECTS}
 	$(OBJDUMP) -d $< > $@
 
 DEBUG: ${OBJECTS}
 	@echo "DEBUG"
 	@echo $<
 
-VIRTUAL_TARGET: ${DEBUG} final.elf ${OBJECTS_BIN} ${OBJECTS_DISASSEMBLY}
+VIRTUAL_TARGET: ${DEBUG} ${OBJECTS_BIN} ${OBJECTS_DISASSEMBLY}
 	@echo "Voila!"
 
 clean:

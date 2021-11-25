@@ -1,7 +1,9 @@
 _start:
     add sp, x0, x0
-    lui sp, %hi(0x80100000)
-    addi sp, sp, %lo(0x80100000)
+    lui sp, %hi(0x81000000)
+    addi sp, sp, %lo(0x81000000)
+    slli sp, sp, 32
+    srli sp, sp, 32
     li x1, 0
     /* skip sp */
     li x3, 0
@@ -33,7 +35,7 @@ _start:
     li x29, 0
     li x30, 0
     li x31, 0 
-    jal _main
+    jal non_main
     li x1, 0x2333
     ecall
 
