@@ -138,6 +138,7 @@ int vlxei8_test() {
 }
 
 int vaddvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -159,6 +160,7 @@ int vaddvv_test() {
 }
 
 int vaddvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -181,6 +183,7 @@ int vaddvx_test() {
 }
 
 int vaddvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -201,6 +204,7 @@ int vaddvi_test() {
 }
 
 int vandvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -223,6 +227,7 @@ int vandvv_test() {
 }
 
 int vandvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -245,6 +250,7 @@ int vandvx_test() {
 }
 
 int vandvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -266,6 +272,7 @@ int vandvi_test() {
 }
 
 int vorvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -288,6 +295,7 @@ int vorvv_test() {
 }
 
 int vorvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -310,6 +318,7 @@ int vorvx_test() {
 }
 
 int vorvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -331,6 +340,7 @@ int vorvi_test() {
 }
 
 int vrsubvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -353,6 +363,7 @@ int vrsubvx_test() {
 }
 
 int vrsubvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -374,6 +385,7 @@ int vrsubvi_test() {
 }
 
 int vsllvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -396,6 +408,7 @@ int vsllvv_test() {
 }
 
 int vsllvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -418,6 +431,7 @@ int vsllvx_test() {
 }
 
 int vsllvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -439,6 +453,7 @@ int vsllvi_test() {
 }
 
 int vsravv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -461,6 +476,7 @@ int vsravv_test() {
 }
 
 int vsravx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -483,6 +499,7 @@ int vsravx_test() {
 }
 
 int vsravi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -504,6 +521,7 @@ int vsravi_test() {
 }
 
 int vsrlvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -526,6 +544,7 @@ int vsrlvv_test() {
 }
 
 int vsrlvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -548,6 +567,7 @@ int vsrlvx_test() {
 }
 
 int vsrlvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -569,6 +589,7 @@ int vsrlvi_test() {
 }
 
 int vsubvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -591,6 +612,7 @@ int vsubvv_test() {
 }
 
 int vsubvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -613,6 +635,7 @@ int vsubvx_test() {
 }
 
 int vsubvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -635,6 +658,7 @@ int vsubvi_test() {
 }
 
 int vxorvv_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -657,6 +681,7 @@ int vxorvv_test() {
 }
 
 int vxorvx_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -679,6 +704,7 @@ int vxorvx_test() {
 }
 
 int vxorvi_test() {
+    data_init();
     asm volatile(
        "li t0, 16                      \n\t\
         vsetvli t0, t0, e8, m1, tu, mu \n\t\
@@ -748,7 +774,7 @@ int non_main() {
         }
     }
     uart_putn(count);
-    uart_puts(" test point pass\n");
+    uart_puts(" test point passed\n");
     uart_puts("RVV vsetvl test end\n");
     uart_puts("-------------------\n");
     uart_puts("\n\n");
@@ -767,7 +793,7 @@ int non_main() {
 	    }
     }
     uart_putn(count);
-    uart_puts(" test point pass\n");
+    uart_puts(" test point passed\n");
     uart_puts("RVV load & store test end\n");
     uart_puts("-------------------------\n");
     uart_puts("\n\n");
@@ -786,7 +812,7 @@ int non_main() {
 	    }
     }
     uart_putn(count);
-    uart_puts(" test point pass\n");
+    uart_puts(" test point passed\n");
     uart_puts("RVV arithmetic test end\n");
     uart_puts("-------------------------\n");
     uart_puts("\n\n");
