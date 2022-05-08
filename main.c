@@ -6,7 +6,7 @@
 
 #define UART_TX_FULL    (1<<0x3)
 #define UART_RX_VALID   (1<<0x0)
-#define UART_BASE       0x40600000
+#define UART_BASE       0xe0000000
 
 void uart_putc(char ch) {
     volatile char *uart_base = (char *)(UART_BASE);
