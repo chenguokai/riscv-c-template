@@ -65,5 +65,5 @@ $(OUTPUT_BINARY_NATIVE): $(OUTPUT_ELF_NATIVE)
 clean:
 	rm *.elf
 	rm *.bin
-	rm *.disass
+	rm *.disasm
 	rm *.o
