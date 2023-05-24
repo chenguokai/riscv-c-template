@@ -1,3 +1,5 @@
+.global _start
+#ifndef NATIVE
 _start:
     add sp, x0, x0
     lui sp, %hi(0x81000000)
@@ -35,7 +37,12 @@ _start:
     li x29, 0
     li x30, 0
     li x31, 0 
+    .option push
+    .option norelax
+    la gp, __global_pointer$
+    .option pop
     jal non_main
     li x1, 0x2333
     ecall
-
+#else // NATIVE
+#endif // NATIVE

@@ -1,50 +1,66 @@
 ####################################
-# This intends to be a simple test suit for RISC-V Vector Extension (RVV)
+# This intends to be a simple test suit framework for RISC-V bare metal/Linux environment
 # licensed under BSD-3-Clause
 ####################################
 
-####################
-# basic info
-####################
+# Define the source files
+SOURCES = main.c start.S
 
-CROSS_PATH = /home/xim/ACS/clang_rvv/bin
-PREFIX = llvm-
-CC = ${CROSS_PATH}/clang-12
-OBJCOPY = ${CROSS_PATH}/${PREFIX}objcopy
-OBJDUMP = ${CROSS_PATH}/${PREFIX}objdump
-LDSCRIPT = linker.ld
-C_SOURCES = $(shell find ./ -name '*.c')
+# Define the output files
+OUTPUT_ELF_CROSS = main.elf
+OUTPUT_DISASM_CROSS = main.disasm
+OUTPUT_BINARY_CROSS = main.bin
+OUTPUT_ELF_NATIVE = main_native.elf
+OUTPUT_DISASM_NATIVE = main_native.disasm
+OUTPUT_BINARY_NATIVE = main_native.bin
 
-# BUILD_DIR = build
+# Define the cross toolchain and flags
+CROSS_PATH ?= /nfs/home/share/riscv/bin/
+PREFIX ?= riscv64-unknown-elf-
 
-# Note that we use clang to compile RVV assembly
-# CFLAGS = -menable-experimental-extensions -march=rv64gv1p0 -nostdlib -nostdinc -T ${LDSCRIPT} -fno-builtin -ffreestanding  -mabi=lp64  -mcmodel=medium 
-CFLAGS = -menable-experimental-extensions -march=rv64gv1p0 -nostdlib -T ${LDSCRIPT} -mcmodel=medany
-####################
-# build rules
-####################
+CROSS_CC = ${CROSS_PATH}/${PREFIX}gcc
+CROSS_LD = ${CROSS_PATH}/${PREFIX}ld
+CROSS_OBJDUMP = ${CROSS_PATH}/${PREFIX}objdump
+CROSS_OBJCOPY = ${CROSS_PATH}/${PREFIX}objcopy
+CROSS_CFLAGS = -g -O0 -nostdlib -mcmodel=medany
+CROSS_LDFLAGS = -T linker.ld
 
-OBJECTS = $(notdir $(C_SOURCES:.c=.elf))
-OBJECTS_BIN = $(OBJECTS:.elf=.bin)
-OBJECTS_DISASSEMBLY = $(OBJECTS:.elf=.disass)
+# Define the native toolchain and flags
+NATIVE_CC = gcc
+NATIVE_LD = ld
+NATIVE_OBJDUMP = objdump
+NATIVE_OBJCOPY = objcopy
+NATIVE_CFLAGS = -Wall -Werror -g -O0 -DNATIVE
+NATIVE_LDFLAGS =
 
-all: VIRTUAL_TARGET
+# Define the default target
+all: $(OUTPUT_ELF_CROSS) $(OUTPUT_DISASM_CROSS) $(OUTPUT_BINARY_CROSS) \
+     $(OUTPUT_ELF_NATIVE) $(OUTPUT_DISASM_NATIVE) $(OUTPUT_BINARY_NATIVE)
 
-${OBJECTS}: %.elf: %.c
-	$(CC) start.S $< $(CFLAGS) -o $@
+native: $(OUTPUT_ELF_NATIVE) $(OUTPUT_DISASM_NATIVE) $(OUTPUT_BINARY_NATIVE)
 
-%.bin: ${OBJECTS}
-	$(OBJCOPY) -O binary $< $@
+cross: $(OUTPUT_ELF_CROSS) $(OUTPUT_DISASM_CROSS) $(OUTPUT_BINARY_CROSS)
 
-%.disass: ${OBJECTS}
-	$(OBJDUMP) -d $< > $@
+# Define the cross toolchain targets
+$(OUTPUT_ELF_CROSS): $(SOURCES)
+	$(CROSS_CC) $(CROSS_CFLAGS) -c $^
+	$(CROSS_LD) $(CROSS_LDFLAGS) *.o -o $@
 
-DEBUG: ${OBJECTS}
-	@echo "DEBUG"
-	@echo $<
+$(OUTPUT_DISASM_CROSS): $(OUTPUT_ELF_CROSS)
+	$(CROSS_OBJDUMP) -d $^ > $@
 
-VIRTUAL_TARGET: ${DEBUG} ${OBJECTS_BIN} ${OBJECTS_DISASSEMBLY}
-	@echo "Voila!"
+$(OUTPUT_BINARY_CROSS): $(OUTPUT_ELF_CROSS)
+	$(CROSS_OBJCOPY) -O binary $^ $@
+
+# Define the native toolchain targets
+$(OUTPUT_ELF_NATIVE): $(SOURCES)
+	$(NATIVE_CC) $(NATIVE_CFLAGS) $^ -o $@
+
+$(OUTPUT_DISASM_NATIVE): $(OUTPUT_ELF_NATIVE)
+	$(NATIVE_OBJDUMP) -d $^ > $@
+
+$(OUTPUT_BINARY_NATIVE): $(OUTPUT_ELF_NATIVE)
+	$(NATIVE_OBJCOPY) -O binary $^ $@
 
 clean:
 	rm *.elf
